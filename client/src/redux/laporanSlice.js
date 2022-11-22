@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import Swal from "sweetalert2";
 
 export const laporanAddAsync = createAsyncThunk(
   "laporan/laporanAddAsync",
@@ -23,7 +24,7 @@ export const laporanAddAsync = createAsyncThunk(
 
 export const laporanListAsync = createAsyncThunk(
   "laporanListAsync",
-  async () => {
+  async (navigate) => {
     try {
       const token = localStorage.getItem("token");
       const laporan = await fetch("http://localhost:5000/laporan/list", {
@@ -32,15 +33,23 @@ export const laporanListAsync = createAsyncThunk(
           token: token,
         },
       });
-      console.log(laporan, "ISI LAPORAN");
-      if (laporan.ok) {
+      if (laporan.status === 200) {
         const laporans = await laporan.json();
         return laporans.data;
       } else if (laporan.statusText === "Unauthorized") {
-        localStorage.removeItem("token");
+        throw new Error(laporan.statusText);
       }
     } catch (error) {
-      console.log(error);
+      localStorage.removeItem("token");
+      navigate("/login");
+      Swal.fire({
+        icon: "error",
+        title: `${error.message}`,
+        text: "Mohon login kembali",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      return error;
     }
   }
 );
@@ -48,7 +57,6 @@ export const laporanListAsync = createAsyncThunk(
 export const laporanEditAsync = createAsyncThunk(
   "laporan/laporanEditAsync",
   async ({ formData, id }) => {
-    console.log(id, "DARI SLICE");
     try {
       const token = localStorage.getItem("token");
       const laporan = await fetch(`http://localhost:5000/laporan/edit/${id}`, {
@@ -70,7 +78,6 @@ export const laporanEditAsync = createAsyncThunk(
 export const laporanDeleteAsync = createAsyncThunk(
   "laporan/laporanDeleteAsync",
   async ({ id }) => {
-    console.log(id, "DARI SLICE");
     try {
       const token = localStorage.getItem("token");
       const laporan = await fetch(

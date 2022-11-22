@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { MdOutlineAlternateEmail } from "react-icons/md";
 import { BsLock } from "react-icons/bs";
 import { AiOutlineUser } from "react-icons/ai";
@@ -14,13 +14,6 @@ export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [check, setCheck] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/");
-    }
-  }, [navigate]);
 
   const {
     register: registerLogin,
@@ -65,14 +58,14 @@ export default function Login() {
                   checked={check}
                   onChange={() => setCheck(!check)}
                 />
-                <label for="reg-log"></label>
+                <label htmlFor="reg-log"></label>
 
                 <div className="card-3d-wrap mx-auto">
                   <div className="card-3d-wrapper">
                     <div className="card-front">
                       <div className="center-wrap">
                         <form
-                          autocomplete="off"
+                          autoComplete="off"
                           onSubmit={handleSubmitLogin(loginSubmit)}
                         >
                           <div className="section">
@@ -84,7 +77,7 @@ export default function Login() {
                                 className="form-style"
                                 placeholder="Your Email"
                                 id="logemail"
-                                autocomplete="off"
+                                autoComplete="off"
                                 {...registerLogin("email", {
                                   required: "Email tidak boleh kosong",
                                   pattern: {
@@ -108,7 +101,7 @@ export default function Login() {
                                 className="form-style"
                                 placeholder="Your Password"
                                 id="logpass"
-                                autocomplete="off"
+                                autoComplete="off"
                                 {...registerLogin("password", {
                                   required: "Password tidak boleh kosong",
                                   pattern: {
@@ -143,7 +136,7 @@ export default function Login() {
                     <div className="card-back">
                       <div className="center-wrap">
                         <form
-                          autocomplete="off"
+                          autoComplete="off"
                           onSubmit={handleSubmitSignup(signupSubmit)}
                         >
                           <div className="section text-center">
@@ -155,7 +148,7 @@ export default function Login() {
                                 className="form-style"
                                 placeholder="Your Full Name"
                                 id="logname"
-                                autocomplete="off"
+                                autoComplete="off"
                                 {...registerSignup("fullName", {
                                   required: "Full Name tidak boleh kosong",
                                 })}
@@ -174,7 +167,7 @@ export default function Login() {
                                 className="form-style"
                                 placeholder="Your Email"
                                 id="logemail"
-                                autocomplete="off"
+                                autoComplete="off"
                                 {...registerSignup("email", {
                                   required: "Email tidak boleh kosong",
                                   pattern: {
@@ -198,7 +191,7 @@ export default function Login() {
                                 className="form-style"
                                 placeholder="Your Password"
                                 id="logpass"
-                                autocomplete="off"
+                                autoComplete="off"
                                 {...registerSignup("password", {
                                   required: "Password tidak boleh kosong",
                                   pattern: {

@@ -50,17 +50,11 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login");
-    }
-  }, [navigate]);
-
-  useEffect(() => {
     setLoading(true);
-    dispatch(laporanListAsync()).then(() => {
+    dispatch(laporanListAsync(navigate)).then(() => {
       setLoading(false);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   const handleDelete = (id) => {
@@ -74,12 +68,14 @@ export default function Dashboard() {
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(laporanDeleteAsync({ id })).then(() => {
-          Swal.fire({
-            icon: "success",
-            title: "Selamat",
-            text: "Selamat data berhasil dihapus",
-            showConfirmButton: false,
-            timer: 1500,
+          dispatch(laporanListAsync()).then(() => {
+            Swal.fire({
+              icon: "success",
+              title: "Selamat",
+              text: "Selamat data berhasil dihapus",
+              showConfirmButton: false,
+              timer: 1500,
+            });
           });
         });
       }

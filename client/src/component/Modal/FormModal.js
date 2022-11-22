@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
@@ -12,14 +12,32 @@ import {
 } from "../../redux/laporanSlice";
 import { useDispatch } from "react-redux";
 
-export default function FormModal({ show, handleClose, source, edit }) {
+export default function FormModal({ show, handleClose, source, edit = "" }) {
   const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
-    formState: { errors, dirtyFields },
+    formState: { errors, isSubmitting },
     reset,
+    setValue,
   } = useForm();
+
+  useEffect(() => {
+    if (source === "edit") {
+      reset();
+      const fields = [
+        "title",
+        "nama_kelompok",
+        "nama_manpro",
+        "nama_ketua",
+        "laporan",
+      ];
+      fields.forEach((field) => setValue(field, edit[field]));
+    } else {
+      reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [source]);
 
   const onSubmit = (data) => {
     const formData = new FormData();
@@ -44,17 +62,18 @@ export default function FormModal({ show, handleClose, source, edit }) {
       });
     } else if (source === "edit") {
       const id = edit.id;
-      console.log(id, "ISI EDIT DI SUBMIT");
       dispatch(laporanEditAsync({ formData, id })).then(() => {
-        handleClose();
-        Swal.fire({
-          icon: "success",
-          title: "Selamat",
-          text: "Selamat data berhasil diubah",
-          showConfirmButton: false,
-          timer: 1500,
+        dispatch(laporanListAsync()).then(() => {
+          handleClose();
+          Swal.fire({
+            icon: "success",
+            title: "Selamat",
+            text: "Selamat data berhasil diubah",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          reset();
         });
-        reset();
       });
     }
   };
@@ -76,7 +95,6 @@ export default function FormModal({ show, handleClose, source, edit }) {
                 })}
                 type="text"
                 placeholder="Masukkan Title"
-                defaultValue={edit?.title}
               />
               {errors.title && (
                 <Form.Text className="text-danger">
@@ -92,7 +110,6 @@ export default function FormModal({ show, handleClose, source, edit }) {
                 })}
                 type="text"
                 placeholder="Masukkan Nama Kelompok"
-                defaultValue={edit?.nama_kelompok}
               />
               {errors.nama_kelompok && (
                 <Form.Text className="text-danger">
@@ -108,7 +125,6 @@ export default function FormModal({ show, handleClose, source, edit }) {
                 })}
                 type="text"
                 placeholder="Masukkan Nama Ketua"
-                defaultValue={edit?.nama_ketua}
               />
               {errors.nama_ketua && (
                 <Form.Text className="text-danger">
@@ -124,7 +140,6 @@ export default function FormModal({ show, handleClose, source, edit }) {
                 })}
                 type="text"
                 placeholder="Masukkan Nama Manpro"
-                defaultValue={edit?.nama_manpro}
               />
               {errors.nama_manpro && (
                 <Form.Text className="text-danger">
@@ -140,8 +155,6 @@ export default function FormModal({ show, handleClose, source, edit }) {
                 })}
                 type="file"
                 placeholder="Masukkan Laporan"
-                // defaultValue={edit?.laporan}
-                // name="image"
               />
               {errors.laporan && (
                 <Form.Text className="text-danger">
@@ -150,17 +163,7 @@ export default function FormModal({ show, handleClose, source, edit }) {
               )}
             </Form.Group>
             <div className="my-4">
-              <Button
-                variant="primary"
-                type="submit"
-                disabled={
-                  !dirtyFields.title ||
-                  !dirtyFields.nama_kelompok ||
-                  !dirtyFields.nama_ketua ||
-                  !dirtyFields.nama_manpro ||
-                  !dirtyFields.laporan
-                }
-              >
+              <Button variant="primary" type="submit" disabled={isSubmitting}>
                 Submit
               </Button>
               <Button variant="primary" className="ms-3" onClick={handleClose}>
