@@ -1,4 +1,5 @@
-const { User } = require("../models");
+const db = require("../models");
+const User = db.user;
 const { verifyToken } = require("../helpers/jwt");
 
 async function authentication(req, res, next) {

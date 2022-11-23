@@ -1,4 +1,5 @@
-const { Laporan } = require("../models");
+const db = require("../models");
+const Laporan = db.laporan;
 
 const authorization = (req, res, next) => {
   let { id } = req.params;

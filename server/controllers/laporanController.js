@@ -1,4 +1,5 @@
-const { Laporan } = require("../models");
+const db = require("../models");
+const Laporan = db.laporan;
 const multer = require("multer");
 const path = require("path");
 

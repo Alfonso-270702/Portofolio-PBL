@@ -1,10 +1,12 @@
-const { User } = require("../models");
+const db = require("../models");
+const User = db.user;
 const { compare } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
 
 class HomeController {
   static login(req, res, next) {
     const { email, password } = req.body;
+    console.log(email, "================");
     User.findOne({
       where: {
         email,
