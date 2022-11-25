@@ -6,13 +6,16 @@ export const laporanAddAsync = createAsyncThunk(
   async (payload) => {
     try {
       const token = localStorage.getItem("token");
-      const laporan = await fetch("http://localhost:5000/laporan/create", {
-        method: "POST",
-        headers: {
-          token: token,
-        },
-        body: payload,
-      });
+      const laporan = await fetch(
+        `${process.env.REACT_APP_API_ENDPOINT}laporan/create`,
+        {
+          method: "POST",
+          headers: {
+            token: token,
+          },
+          body: payload,
+        }
+      );
       if (laporan.ok) {
         return laporan;
       }
@@ -27,12 +30,16 @@ export const laporanListAsync = createAsyncThunk(
   async (navigate) => {
     try {
       const token = localStorage.getItem("token");
-      const laporan = await fetch("http://localhost:5000/laporan/list", {
-        method: "GET",
-        headers: {
-          token: token,
-        },
-      });
+
+      const laporan = await fetch(
+        `${process.env.REACT_APP_API_ENDPOINT}laporan/list`,
+        {
+          method: "GET",
+          headers: {
+            token: token,
+          },
+        }
+      );
       if (laporan.status === 200) {
         const laporans = await laporan.json();
         return laporans.data;

@@ -4,7 +4,8 @@ export const userLoginAsync = createAsyncThunk(
   "user/userLoginAsync",
   async (payload) => {
     try {
-      const user = await fetch("http://localhost:5000/login", {
+      console.log(process.env.REACT_APP_API_ENDPOINT, "URL");
+      const user = await fetch(`${process.env.REACT_APP_API_ENDPOINT}login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -26,13 +27,16 @@ export const userRegisterAsync = createAsyncThunk(
   "user/userRegisterAsync",
   async (payload) => {
     try {
-      const user = await fetch("http://localhost:5000/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const user = await fetch(
+        `${process.env.REACT_APP_API_ENDPOINT}register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
       if (user.ok) {
         return user;
       }
