@@ -66,13 +66,16 @@ export const laporanEditAsync = createAsyncThunk(
   async ({ formData, id }) => {
     try {
       const token = localStorage.getItem("token");
-      const laporan = await fetch(`http://localhost:5000/laporan/edit/${id}`, {
-        method: "PUT",
-        headers: {
-          token: token,
-        },
-        body: formData,
-      });
+      const laporan = await fetch(
+        `${process.env.REACT_APP_API_ENDPOINT}laporan/edit/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            token: token,
+          },
+          body: formData,
+        }
+      );
       if (laporan.ok) {
         return laporan;
       }
@@ -88,7 +91,7 @@ export const laporanDeleteAsync = createAsyncThunk(
     try {
       const token = localStorage.getItem("token");
       const laporan = await fetch(
-        `http://localhost:5000/laporan/delete/${id}`,
+        `${process.env.REACT_APP_API_ENDPOINT}laporan/delete/${id}`,
         {
           method: "DELETE",
           headers: {
