@@ -6,5 +6,13 @@
     "host": "localhost",
     "dialect": "mysql",
     "port": 3306
+  },
+  "production": {
+    "username": "kel3",
+    "password": "Kelompok3", 
+    "database": "pbl3",
+    "host": "192.168.20.10",
+    "dialect": "mysql",
+    "port": 3306
   }
 }
