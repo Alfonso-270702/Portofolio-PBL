@@ -8,7 +8,8 @@ export const userLoginAsync = createAsyncThunk(
       const user = await fetch(`${process.env.REACT_APP_API_ENDPOINT}login`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          // "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
       });
@@ -32,7 +33,8 @@ export const userRegisterAsync = createAsyncThunk(
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
+            // "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(payload),
         }
