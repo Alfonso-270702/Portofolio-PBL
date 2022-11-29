@@ -42,7 +42,7 @@ export default function Table({
                         className="btn btn-primary me-3 edit-button"
                         onClick={() => {
                           handleShow("edit");
-                          setEdit(data);
+                          setEdit(data.id);
                         }}
                       >
                         Edit

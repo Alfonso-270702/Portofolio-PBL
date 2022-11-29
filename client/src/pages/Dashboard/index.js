@@ -51,9 +51,13 @@ export default function Dashboard() {
 
   useEffect(() => {
     setLoading(true);
-    dispatch(laporanListAsync(navigate)).then(() => {
-      setLoading(false);
-    });
+    dispatch(laporanListAsync(navigate))
+      .then(() => {
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err, "DARI DASHBOARD");
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -112,6 +116,7 @@ export default function Dashboard() {
         handleClose={handleClose}
         source={source}
         edit={edit}
+        setSource={setSource}
       />
     </>
   );

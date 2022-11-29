@@ -7,6 +7,7 @@ route.use(authentication);
 
 route.post("/create", LaporanController.upload, LaporanController.create);
 route.get("/list", LaporanController.list);
+route.get("/:id", LaporanController.getOne);
 route.put(
   "/edit/:id",
   authorization,
