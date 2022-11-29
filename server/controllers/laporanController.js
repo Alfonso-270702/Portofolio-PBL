@@ -1,6 +1,10 @@
 const { Laporan } = require("../models");
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
+const { promisify } = require("util");
+
+const unlinkAsync = promisify(fs.unlink);
 
 // class LaporanController {
 //   static list(req, res, next) {
@@ -117,20 +121,28 @@ const create = (req, res, next) => {
 
 const edit = (req, res, next) => {
   const { title, nama_kelompok, nama_ketua, nama_manpro } = req.body;
-  Laporan.update(
-    {
-      title,
-      nama_kelompok,
-      nama_ketua,
-      nama_manpro,
-      laporan: req.file.path,
+  Laporan.findOne({
+    where: {
+      id: req.params.id,
     },
-    {
-      where: {
-        id: req.params.id,
-      },
-    }
-  )
+  })
+    .then(({ dataValues }) => {
+      unlinkAsync(dataValues.laporan);
+      return Laporan.update(
+        {
+          title,
+          nama_kelompok,
+          nama_ketua,
+          nama_manpro,
+          laporan: req.file.path,
+        },
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      );
+    })
     .then((data) => {
       if (!data) throw { msg: "ERROR! Not Found", status: 404 };
       else res.status(200).json({ msg: "Berhasil mengedit laporan" });
@@ -142,11 +154,20 @@ const edit = (req, res, next) => {
 
 const remove = (req, res, next) => {
   const id = req.params.id;
-  Laporan.destroy({
+  Laporan.findOne({
     where: {
-      id,
+      id: req.params.id,
     },
   })
+    .then(({ dataValues }) => {
+      unlinkAsync(dataValues.laporan);
+      return Laporan.destroy({
+        where: {
+          id,
+        },
+      });
+    })
+
     .then((data) => {
       if (!data) throw { msg: "ERROR! Not Found", status: 404 };
       else res.status(200).json({ msg: "Berhasil menghapus laporan" });
