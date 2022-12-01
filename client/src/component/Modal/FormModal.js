@@ -9,17 +9,10 @@ import {
   laporanAddAsync,
   laporanEditAsync,
   laporanListAsync,
-  laporanGetOneAsync,
 } from "../../redux/laporanSlice";
 import { useDispatch } from "react-redux";
 
-export default function FormModal({
-  show,
-  handleClose,
-  source,
-  edit = "",
-  setSource,
-}) {
+export default function FormModal({ show, handleClose, source, edit = "" }) {
   const dispatch = useDispatch();
   const {
     register,
@@ -31,22 +24,20 @@ export default function FormModal({
 
   useEffect(() => {
     if (source === "edit") {
-      dispatch(laporanGetOneAsync(edit)).then((data) => {
-        reset();
-        const fields = [
-          "title",
-          "nama_kelompok",
-          "nama_manpro",
-          "nama_ketua",
-          "laporan",
-        ];
-        fields.forEach((field) => setValue(field, data.payload[field]));
-      });
+      reset();
+      const fields = [
+        "title",
+        "nama_kelompok",
+        "nama_manpro",
+        "nama_ketua",
+        "laporan",
+      ];
+      fields.forEach((field) => setValue(field, edit[field]));
     } else {
       reset();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [source, edit]);
+  }, [source]);
 
   const onSubmit = (data) => {
     const formData = new FormData();
@@ -66,12 +57,11 @@ export default function FormModal({
             showConfirmButton: false,
             timer: 1500,
           });
-          setSource("");
           reset();
         });
       });
     } else if (source === "edit") {
-      const id = edit;
+      const id = edit.id;
       dispatch(laporanEditAsync({ formData, id })).then(() => {
         dispatch(laporanListAsync()).then(() => {
           handleClose();
@@ -82,7 +72,6 @@ export default function FormModal({
             showConfirmButton: false,
             timer: 1500,
           });
-          setSource("");
           reset();
         });
       });
