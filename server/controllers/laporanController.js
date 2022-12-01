@@ -119,6 +119,20 @@ const create = (req, res, next) => {
     });
 };
 
+const getOne = (req, res, next) => {
+  Laporan.findOne({
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then((data) => {
+      res.status(200).json({ data });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
 const edit = (req, res, next) => {
   const { title, nama_kelompok, nama_ketua, nama_manpro } = req.body;
   Laporan.findOne({
@@ -208,4 +222,5 @@ module.exports = {
   edit,
   remove,
   upload,
+  getOne,
 };

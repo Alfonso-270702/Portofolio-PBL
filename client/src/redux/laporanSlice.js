@@ -16,11 +16,11 @@ export const laporanAddAsync = createAsyncThunk(
           body: payload,
         }
       );
-      if (laporan.ok) {
+      if (laporan.status === 201) {
         return laporan;
       }
     } catch (error) {
-      console.log(error);
+      return error.message;
     }
   }
 );
@@ -56,7 +56,33 @@ export const laporanListAsync = createAsyncThunk(
         showConfirmButton: false,
         timer: 1500,
       });
-      return error;
+      return error.message;
+    }
+  }
+);
+
+export const laporanGetOneAsync = createAsyncThunk(
+  "laporanGetOneAsync",
+  async (edit) => {
+    try {
+      const token = localStorage.getItem("token");
+      const laporan = await fetch(
+        `${process.env.REACT_APP_API_ENDPOINT}laporan/${edit}`,
+        {
+          method: "GET",
+          headers: {
+            token: token,
+          },
+        }
+      );
+      if (laporan.status === 200) {
+        const laporans = await laporan.json();
+        return laporans.data;
+      } else if (laporan.statusText === "Unauthorized") {
+        throw new Error(laporan.statusText);
+      }
+    } catch (error) {
+      return error.message;
     }
   }
 );
@@ -76,11 +102,11 @@ export const laporanEditAsync = createAsyncThunk(
           body: formData,
         }
       );
-      if (laporan.ok) {
+      if (laporan.status === 200) {
         return laporan;
       }
     } catch (error) {
-      console.log(error);
+      return error.message;
     }
   }
 );
@@ -99,11 +125,11 @@ export const laporanDeleteAsync = createAsyncThunk(
           },
         }
       );
-      if (laporan.ok) {
+      if (laporan.status === 200) {
         return laporan;
       }
     } catch (error) {
-      console.log(error);
+      return error.message;
     }
   }
 );

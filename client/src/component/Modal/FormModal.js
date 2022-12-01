@@ -9,10 +9,17 @@ import {
   laporanAddAsync,
   laporanEditAsync,
   laporanListAsync,
+  laporanGetOneAsync,
 } from "../../redux/laporanSlice";
 import { useDispatch } from "react-redux";
 
-export default function FormModal({ show, handleClose, source, edit = "" }) {
+export default function FormModal({
+  show,
+  handleClose,
+  source,
+  edit = "",
+  setSource,
+}) {
   const dispatch = useDispatch();
   const {
     register,
@@ -24,20 +31,22 @@ export default function FormModal({ show, handleClose, source, edit = "" }) {
 
   useEffect(() => {
     if (source === "edit") {
-      reset();
-      const fields = [
-        "title",
-        "nama_kelompok",
-        "nama_manpro",
-        "nama_ketua",
-        "laporan",
-      ];
-      fields.forEach((field) => setValue(field, edit[field]));
+      dispatch(laporanGetOneAsync(edit)).then((data) => {
+        reset();
+        const fields = [
+          "title",
+          "nama_kelompok",
+          "nama_manpro",
+          "nama_ketua",
+          "laporan",
+        ];
+        fields.forEach((field) => setValue(field, data.payload[field]));
+      });
     } else {
       reset();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [source]);
+  }, [source, edit]);
 
   const onSubmit = (data) => {
     const formData = new FormData();
@@ -57,11 +66,12 @@ export default function FormModal({ show, handleClose, source, edit = "" }) {
             showConfirmButton: false,
             timer: 1500,
           });
+          setSource("");
           reset();
         });
       });
     } else if (source === "edit") {
-      const id = edit.id;
+      const id = edit;
       dispatch(laporanEditAsync({ formData, id })).then(() => {
         dispatch(laporanListAsync()).then(() => {
           handleClose();
@@ -72,6 +82,7 @@ export default function FormModal({ show, handleClose, source, edit = "" }) {
             showConfirmButton: false,
             timer: 1500,
           });
+          setSource("");
           reset();
         });
       });
