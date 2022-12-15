@@ -9,6 +9,26 @@ export default function Table({
   handleDelete,
   setEdit,
 }) {
+  const download = (data) => {
+    fetch(`${process.env.REACT_APP_API_ENDPOINT}${data.laporan}`, {
+      method: "GET",
+      headers: {},
+    })
+      .then((response) => {
+        response.arrayBuffer().then(function (buffer) {
+          const url = window.URL.createObjectURL(new Blob([buffer]));
+          const link = document.createElement("a");
+          const fileName = data.laporan.split("\\")[1];
+          link.href = url;
+          link.setAttribute("download", fileName); //or any other extension
+          document.body.appendChild(link);
+          link.click();
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <table className="responsive-table">
       <thead>
@@ -35,7 +55,17 @@ export default function Table({
                     <td data-label="Nama_Kelompok">{data.nama_kelompok}</td>
                     <td data-label="Nama_Ketua">{data.nama_ketua}</td>
                     <td data-label="Nama_Manpro">{data.nama_manpro}</td>
-                    <td></td>
+                    <td>
+                      <button
+                        type="button"
+                        className="btn btn-secondary me-3 edit-button"
+                        onClick={() => {
+                          download(data);
+                        }}
+                      >
+                        Download Laporan
+                      </button>
+                    </td>
                     <td data-label="Action">
                       <button
                         type="button"

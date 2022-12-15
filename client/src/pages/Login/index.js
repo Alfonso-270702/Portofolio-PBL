@@ -18,13 +18,21 @@ export default function Login() {
   const {
     register: registerLogin,
     handleSubmit: handleSubmitLogin,
-    formState: { errors: errorsLogin, dirtyFields: dirtyFieldsLogin },
+    formState: {
+      errors: errorsLogin,
+      dirtyFields: dirtyFieldsLogin,
+      isSubmitting: isSubmittingLogin,
+    },
   } = useForm();
 
   const {
     register: registerSignup,
     handleSubmit: handleSubmitSignup,
-    formState: { errors: errorsSignup, dirtyFields: dirtyFieldsSignup },
+    formState: {
+      errors: errorsSignup,
+      dirtyFields: dirtyFieldsSignup,
+      isSubmitting: isSubmittingSignup,
+    },
   } = useForm();
 
   const loginSubmit = (data) => {
@@ -123,7 +131,8 @@ export default function Login() {
                               className="button mt-4"
                               disabled={
                                 !dirtyFieldsLogin.email ||
-                                !dirtyFieldsLogin.password
+                                !dirtyFieldsLogin.password ||
+                                isSubmittingLogin
                               }
                             >
                               submit
@@ -214,7 +223,8 @@ export default function Login() {
                               disabled={
                                 !dirtyFieldsSignup.email ||
                                 !dirtyFieldsSignup.password ||
-                                !dirtyFieldsSignup.fullName
+                                !dirtyFieldsSignup.fullName ||
+                                isSubmittingSignup
                               }
                             >
                               submit
