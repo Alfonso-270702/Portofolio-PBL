@@ -4,7 +4,6 @@ export const userLoginAsync = createAsyncThunk(
   "user/userLoginAsync",
   async (payload) => {
     try {
-      console.log(process.env.REACT_APP_API_ENDPOINT, "URL");
       const user = await fetch(`${process.env.REACT_APP_API_ENDPOINT}login`, {
         method: "POST",
         headers: {
@@ -18,7 +17,7 @@ export const userLoginAsync = createAsyncThunk(
         return { userDetail };
       }
     } catch (error) {
-      console.log(error);
+      return error;
     }
   }
 );
@@ -41,7 +40,7 @@ export const userRegisterAsync = createAsyncThunk(
         return user;
       }
     } catch (error) {
-      console.log(error);
+      return error;
     }
   }
 );
