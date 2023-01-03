@@ -1,4 +1,6 @@
 require("dotenv").config();
+const https = require("https");
+const fs = require("fs");
 
 const express = require("express");
 const app = express();
@@ -17,9 +19,20 @@ app.use("/Images", express.static("./Images"));
 
 app.use(route);
 app.use(errHandler);
+app.get("/", (req, res) => {
+  res.send("Hello from express server.");
+});
 
-if (process.env.NODE_ENV != "test") {
-  app.listen(port, ip, () => console.log(`running on port ${port}`));
-}
+https
+  .createServer(
+    {
+      key: fs.readFileSync("key.pem"),
+      cert: fs.readFileSync("cert.pem"),
+    },
+    app
+  )
+  .listen(port, ip, () => {
+    console.log(`running on port ${port}`);
+  });
 
 module.exports = app;
