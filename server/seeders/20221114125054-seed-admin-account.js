@@ -7,8 +7,8 @@ module.exports = {
       [
         {
           fullName: 'Dummy Admin',
-          email: 'dumm_adminy@gmail.com',
-          password: encrypt('Dummy@1'),
+          email: 'dummy_admin@gmail.com',
+          password: encrypt('Dummy_Admin@1'),
           role: 'admin',
           createdAt: new Date(),
           updatedAt: new Date(),
